@@ -3,65 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAX VIP TV | الواجهة المباشرة</title>
+    <title>MAX VIP TV | Smart TV</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; outline: none; }
         body { background: #000; color: #fff; overflow-x: hidden; }
         [tabindex]:focus { border: 5px solid #ffcc00 !important; background: #222 !important; transform: scale(1.03); }
-        
-        /* مشغل الفيديو */
-        #player-wrapper { display: none; background: #000; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 1000; }
+        #player-wrapper { display: none; background: #000; border-bottom: 2px solid #333; }
         video { width: 100%; aspect-ratio: 16/9; background: #000; display: block; }
-        
+        .quality-selector { background: #111; padding: 10px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .q-btn { background: #333; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1rem; }
         .content-area { text-align: center; padding: 20px; padding-bottom: 100px; }
         .logo-img { width: 100px; height: 100px; border-radius: 15px; border: 2px solid #ffcc00; margin-bottom: 10px; }
-        
-        /* الشبكات والتصنيفات */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-top: 20px; }
+        .main-menu, .cat-grid, .chan-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; }
         .card { background: #1a1a1a; padding: 25px 10px; border-radius: 15px; border: 2px solid #333; cursor: pointer; text-align: center; transition: 0.1s; }
-        .card i { font-size: 2.2rem; color: #ffcc00; margin-bottom: 12px; display: block; }
-        .card h4 { font-size: 1.1rem; }
-
-        .back-btn { background: #ffcc00; color: #000; padding: 12px 30px; border-radius: 10px; cursor: pointer; margin-bottom: 15px; border: none; font-weight: bold; width: 100%; font-size: 1.1rem; }
+        .card i { font-size: 2rem; color: #ffcc00; margin-bottom: 10px; display: block; }
+        .back-btn { background: #ffcc00; color: #000; padding: 12px 30px; border-radius: 10px; cursor: pointer; margin-bottom: 15px; border: none; font-weight: bold; font-size: 1.1rem; }
         .ticker { background: #ffcc00; color: #000; padding: 8px; text-align: center; font-weight: bold; }
         
+        /* أزرار التواصل الاجتماعي */
         .social-footer { margin-top: 40px; padding: 20px; border-top: 1px solid #333; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .social-btn { background: #1a1a1a; color: #fff; text-decoration: none; padding: 15px 25px; border-radius: 12px; border: 2px solid #333; display: flex; align-items: center; gap: 10px; }
-        .whatsapp { color: #25D366; } .telegram { color: #0088cc; } .instagram { color: #E1306C; }
+        .social-btn { background: #1a1a1a; color: #fff; text-decoration: none; padding: 15px 25px; border-radius: 12px; border: 2px solid #333; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
+        .social-btn i { font-size: 1.5rem; }
+        .whatsapp { color: #25D366; }
+        .telegram { color: #0088cc; }
+        .instagram { color: #E1306C; }
     </style>
 </head>
 <body>
 
-<div class="ticker">MAX VIP STORE - القنوات مقسمة حسب الفئات مباشرة</div>
+<div class="ticker">MAX VIP STORE - أفضل تجربة مشاهدة مباشرة</div>
 
 <div id="player-wrapper">
     <video id="video" controls autoplay playsinline preload="auto"></video>
+    <div class="quality-selector" id="quality-area" style="display:none;">
+        <button class="q-btn" tabindex="0" onclick="changeQuality('adaptive')">تلقائي</button>
+        <button class="q-btn" tabindex="0" onclick="changeQuality('1080')">1080p</button>
+        <button class="q-btn" tabindex="0" onclick="changeQuality('720')">720p</button>
+        <button class="q-btn" tabindex="0" onclick="changeQuality('480')">480p</button>
+    </div>
     <div id="playing-now" style="text-align:center;color:#ffcc00;padding:10px;font-weight:bold;"></div>
 </div>
 
 <div class="content-area">
     <img src="https://i.ibb.co/N6kq4DMs/1000045857.webp" class="logo-img">
     
-    <div id="categories-layer">
-        <div class="grid-container" id="cat-container">
-            </div>
+    <div id="main-menu" class="main-menu">
+        <div class="card" tabindex="0" onclick="openNetwork('others')"><i class="fas fa-tv"></i><h4>كافة الشبكات</h4></div>
+        <div class="card" tabindex="0" onclick="openNetwork('earthlink')"><i class="fas fa-globe"></i><h4>أيرثلنك</h4></div>
+        <div class="card" tabindex="0" onclick="openNetwork('giganet')"><i class="fas fa-bolt"></i><h4>غيغا نت</h4></div>
+    </div>
+
+    <div id="categories-layer" style="display:none;">
+        <button class="back-btn" tabindex="0" onclick="showMain()">عودة للرئيسية</button>
+        <div class="cat-grid" id="cat-container"></div>
     </div>
 
     <div id="channels-layer" style="display:none;">
-        <button class="back-btn" tabindex="0" onclick="showCategories()">عودة لجميع الأقسام</button>
-        <div class="grid-container" id="channels-list"></div>
+        <button class="back-btn" tabindex="0" onclick="backToCats()">عودة للأقسام</button>
+        <div class="chan-grid" id="channels-list"></div>
     </div>
 
     <div class="social-footer">
-        <a href="https://whatsapp.com/channel/0029VbCbHZuEVccJdJIfuC1R" class="social-btn" tabindex="0">
+        <a href="https://whatsapp.com/channel/0029VbCbHZuEVccJdJIfuC1R" class="social-btn" tabindex="0" target="_blank">
             <i class="fab fa-whatsapp whatsapp"></i> <span>واتساب</span>
         </a>
-        <a href="https://t.me/MAX_VIP_STORE" class="social-btn" tabindex="0">
+        <a href="https://t.me/MAX_VIP_STORE" class="social-btn" tabindex="0" target="_blank">
             <i class="fab fa-telegram telegram"></i> <span>تليجرام</span>
         </a>
-        <a href="https://www.instagram.com/iq.iptv?igsh=NGl5bG1jOHZnaGE4" class="social-btn" tabindex="0">
+        <a href="https://www.instagram.com/iq.iptv?igsh=NGl5bG1jOHZnaGE4" class="social-btn" tabindex="0" target="_blank">
             <i class="fab fa-instagram instagram"></i> <span>انستغرام</span>
         </a>
     </div>
@@ -69,99 +80,58 @@
 
 <script>
     var video = document.getElementById('video');
+    var currentBaseUrl = '';
+    var currentChannelName = '';
+    var currentNet = '';
 
-    // البيانات مدمجة مباشرة في الكود
-    const categoriesData = {
-        bein: { n: "beIN Sports", icon: "fa-volleyball-ball", links: [
-            {n:"beIN Sports 1 HD", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch1/ch1_1080.m3u8"},
-            {n:"beIN Sports 2 HD", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch2/ch2_1080.m3u8"},
-            {n:"beIN Sports 3 HD", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch3/ch3_1080.m3u8"},
-            {n:"beIN Sports 4 HD", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch4/ch4_1080.m3u8"},
-            {n:"beIN Sports 5 HD", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch5/ch5_1080.m3u8"},
-            {n:"MAX VIP SPORT", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch8/ch8_1080.m3u8"}
-        ]},
-        iraq: { n: "قنوات عراقية", icon: "fa-flag", links: [
-            {n:"العراقية Al Iraqia", u:"https://p.u-news.net/hls/iraqia.m3u8"},
-            {n:"الشرقية Al Sharqiya", u:"https://5d94523502c2d.streamlock.net/home/mystream/playlist.m3u8"},
-            {n:"السومرية Al Sumaria", u:"https://shstream.alsumaria.tv/alsumaria-live/live/playlist.m3u8"},
-            {n:"UTV Iraq", u:"https://mn-nl.mncdn.com/utviraqi2/64c80359/index.m3u8"},
-            {n:"دجلة Dijla TV", u:"https://dijlah.itworkscdn.net/dijlah/live/playlist.m3u8"},
-            {n:"الرشيد Al Rasheed", u:"https://media1.livaat.com/static/AL-RASHEED-HD/playlist.m3u8"}
-        ]},
-        news: { n: "أخبار ومنوعات", icon: "fa-newspaper", links: [
-            {n:"الجزيرة الإخبارية", u:"https://live-hls-apps-aja-fa.getaj.net/AJA/index.m3u8"},
-            {n:"العربية HD", u:"https://live.alarabiya.net/alarabiya/alarabiya.smil/playlist.m3u8"},
-            {n:"الحدث Al Hadath", u:"https://live.alarabiya.net/alhadath/alhadath.smil/playlist.m3u8"},
-            {n:"سكاي نيوز عربية", u:"https://snatv.akamaized.net/hls/live/2034444/snatv/snatv_abr.m3u8"}
-        ]},
-        movies: { n: "أفلام وترفيه", icon: "fa-film", links: [
-            {n:"MBC مصر HD", u:"https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-masr/index.m3u8"},
-            {n:"Rotana Cinema", u:"https://rotana-cinema-egy-ksa.amagi.tv/playlist.m3u8"},
-            {n:"Rotana Comedy", u:"https://rotana-comedy-ksa.amagi.tv/playlist.m3u8"},
-            {n:"دبي TV", u:"https://dmi.itworkscdn.net/dmilive/dubaitv/playlist.m3u8"}
-        ]},
-        kids: { n: "أطفال ووثائقي", icon: "fa-child", links: [
-            {n:"سبيستون Spacetoon", u:"http://live.spacetoon.com/hls/spacetoon/index.m3u8"},
-            {n:"براعم Baraem", u:"https://live-hls-apps-ajb-fa.getaj.net/AJB/index.m3u8"},
-            {n:"جيم Jeem TV", u:"https://live-hls-apps-aje-fa.getaj.net/AJE/index.m3u8"},
-            {n:"AD NatGeo", u:"https://adp3.akamaized.net/hls/live/2030547/adp3/playlist.m3u8"}
-        ]},
-        islam: { n: "إسلاميات", icon: "fa-kaaba", links: [
-            {n:"قناة القرآن الكريم", u:"https://shd-gcp-live.edgenextcdn.net/live/bitmovin-saudi-quran/index.m3u8"},
-            {n:"قناة السنة النبوية", u:"https://shd-gcp-live.edgenextcdn.net/live/bitmovin-saudi-sunnah/index.m3u8"},
-            {n:"كربلاء Karbala", u:"https://ktvlive.online/stream/hls/ch1.m3u8"}
-        ]}
-    };
-
-    // تشغيل الأقسام عند تحميل الصفحة فوراً
-    window.onload = function() {
-        renderCategories();
-    };
-
-    function renderCategories() {
-        const container = document.getElementById('cat-container');
-        container.innerHTML = '';
-        for (let key in categoriesData) {
-            let cat = categoriesData[key];
-            let div = document.createElement('div');
-            div.className = 'card';
-            div.tabIndex = 0;
-            div.innerHTML = `<i class="fas ${cat.icon}"></i><h4>${cat.n}</h4>`;
-            div.onclick = () => openCategory(key);
-            container.appendChild(div);
-        }
-    }
-
-    function openCategory(key) {
-        document.getElementById('categories-layer').style.display = 'none';
-        document.getElementById('channels-layer').style.display = 'block';
-        const list = document.getElementById('channels-list');
-        list.innerHTML = '';
-        
-        categoriesData[key].links.forEach(link => {
-            let div = document.createElement('div');
-            div.className = 'card';
-            div.tabIndex = 0;
-            div.innerHTML = `<i class="fas fa-play-circle"></i><h4>${link.n}</h4>`;
-            div.onclick = () => playChannel(link.n, link.u);
-            list.appendChild(div);
-        });
-        if(list.querySelector('.card')) list.querySelector('.card').focus();
-    }
-
-    function playChannel(name, url) {
-        document.getElementById('player-wrapper').style.display = 'block';
-        document.getElementById('playing-now').innerText = "جاري المشاهدة: " + name;
-        video.src = url;
-        video.play();
-        window.scrollTo(0, 0);
-    }
-
-    function showCategories() {
-        document.getElementById('channels-layer').style.display = 'none';
-        document.getElementById('categories-layer').style.display = 'block';
-    }
-</script>
-
-</body>
-</html>
+    const networks = {
+        others: {
+            cats: {
+                bein: { n: "beIN Sports", links: [
+                    {n:"BN1 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch1/ch1_1080.m3u8"},
+                    {n:"BN2 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch2/ch2_1080.m3u8"},
+                    {n:"BN3 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch3/ch3_1080.m3u8"},
+                    {n:"BN4 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch4/ch4_1080.m3u8"},
+                    {n:"BN5 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch5/ch5_1080.m3u8"},
+                    {n:"BN6 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch6/ch6_1080.m3u8"},
+                    {n:"BN7 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch7/ch7_1080.m3u8"},
+                    {n:"MAXVIP", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch8/ch8_1080.m3u8"},
+                    {n:"BN9", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch9/ch9_1080.m3u8"},
+                    {n:"STARZPLAY", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch10/ch10_1080.m3u8"}
+                ]},
+                alkass: { n: "قنوات الكاس", links: [
+                    {n:"الكاس 1", u:"https://liveeu-gcp.alkassdigital.net/alkass1-p/main.m3u8"},
+                    {n:"الكاس 2", u:"https://liveeu-gcp.alkassdigital.net/alkass2-p/main.m3u8"},
+                    {n:"الكاس 3", u:"https://liveeu-gcp.alkassdigital.net/alkass3-p/main.m3u8"},
+                    {n:"الكاس 4", u:"https://liveeu-gcp.alkassdigital.net/alkass4-p/main.m3u8"},
+                    {n:"الكاس 5", u:"https://liveeu-gcp.alkassdigital.net/alkass5-p/main.m3u8"},
+                    {n:"الكاس 6", u:"https://liveeu-gcp.alkassdigital.net/alkass6-p/main.m3u8"},
+                    {n:"الكاس 7", u:"https://liveeu-gcp.alkassdigital.net/alkass7-p/main.m3u8"}
+                ]},
+                news: { n: "الأخبار والمنوعات", links: [
+                    {n:"الجزيزة الاخبارية", u:"https://live-hls-apps-aja-fa.getaj.net/AJA/index.m3u8"},
+                    {n:"قناة العربي", u:"https://live.kwikmotion.com/alaraby1live/alaraby_abr/playlist.m3u8"},
+                    {n:"قناة العربي 2", u:"https://live.kwikmotion.com/alaraby2live/alaraby2.smil/playlist.m3u8"},
+                    {n:"الشرقية", u:"https://5d94523502c2d.streamlock.net/home/mystream/playlist.m3u8"},
+                    {n:"الشرقية نيوز", u:"https://5d94523502c2d.streamlock.net/alsharqiyalive/mystream/playlist.m3u8"},
+                    {n:"الرشيد", u:"https://media1.livaat.com/static/AL-RASHEED-HD/playlist.m3u8"},
+                    {n:"MBC IRAQ", u:"https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-iraq/e38c44b1b43474e1c39cb5b90203691e/index.m3u8"},
+                    {n:"UTV", u:"https://mn-nl.mncdn.com/utviraqi2/64c80359/index.m3u8"},
+                    {n:"I NEWS", u:"https://live.i-news.tv/hls/stream.m3u8"},
+                    {n:"عراق المستقبل", u:"https://viewmedia7219.bozztv.com/wmedia/viewmedia100/web_040/Stream/playlist.m3u8"},
+                    {n:"BBC AR", u:"https://vs-hls-pushb-ww-live.akamaized.net/x=4/i=urn:bbc:pips:service:bbc_arabic_tv/mobile_wifi_main_hd_abr_v2.m3u8"}
+                ]},
+                kids: { n: "الأطفال والدينية", links: [
+                    {n:"قناة الاطفال 1", u:"https://5dcabf026b188.streamlock.net/afarinTV/livestream/playlist.m3u8"},
+                    {n:"الجوادين", u:"https://live.aljawadain.org/live/aljawadaintv/playlist.m3u8"},
+                    {n:"كربلاء القرآن", u:"https://ktvlive.online/stream/hls/ch1.m3u8"},
+                    {n:"المرجعية", u:"https://livefa.marjaeyattv.com/mtv_ar/playlist.m3u8"}
+                ]},
+                turkish: { n: "قنوات تركية", links: [
+                    {n:"BN SPORT TR", u:"https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-1.m3u8"},
+                    {n:"BEIN SPORTS TR 2", u:"https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-2.m3u8"},
+                    {n:"BEIN SPORTS TR 3", u:"https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-3.m3u8"}
+                ]}
+            }
+        },
+        earthlink: {
