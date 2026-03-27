@@ -36,12 +36,6 @@
 
 <div id="player-wrapper">
     <video id="video" controls autoplay playsinline preload="auto"></video>
-    <div class="quality-selector" id="quality-area" style="display:none;">
-        <button class="q-btn" tabindex="0" onclick="changeQuality('adaptive')">تلقائي</button>
-        <button class="q-btn" tabindex="0" onclick="changeQuality('1080')">1080p</button>
-        <button class="q-btn" tabindex="0" onclick="changeQuality('720')">720p</button>
-        <button class="q-btn" tabindex="0" onclick="changeQuality('480')">480p</button>
-    </div>
     <div id="playing-now" style="text-align:center;color:#ffcc00;padding:10px;font-weight:bold;"></div>
 </div>
 
@@ -91,12 +85,19 @@
                     {n:"BN4 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch4/ch4_1080.m3u8"},
                     {n:"BN5 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch5/ch5_1080.m3u8"},
                     {n:"BN6 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch6/ch6_1080.m3u8"},
-                    {n:"MAXVIP", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch8/ch8_1080.m3u8"}
+                    {n:"BN7 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch7/ch7_1080.m3u8"},
+                    {n:"MAXVIP", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch8/ch8_1080.m3u8"},
+                    {n:"BN9", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch9/ch9_1080.m3u8"},
+                    {n:"STARZPLAY", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch10/ch10_1080.m3u8"}
                 ]},
                 alkass: { n: "قنوات الكاس", links: [
                     {n:"الكاس 1", u:"https://liveeu-gcp.alkassdigital.net/alkass1-p/main.m3u8"},
                     {n:"الكاس 2", u:"https://liveeu-gcp.alkassdigital.net/alkass2-p/main.m3u8"},
-                    {n:"الكاس 3", u:"https://liveeu-gcp.alkassdigital.net/alkass3-p/main.m3u8"}
+                    {n:"الكاس 3", u:"https://liveeu-gcp.alkassdigital.net/alkass3-p/main.m3u8"},
+                    {n:"الكاس 4", u:"https://liveeu-gcp.alkassdigital.net/alkass4-p/main.m3u8"},
+                    {n:"الكاس 5", u:"https://liveeu-gcp.alkassdigital.net/alkass5-p/main.m3u8"},
+                    {n:"الكاس 6", u:"https://liveeu-gcp.alkassdigital.net/alkass6-p/main.m3u8"},
+                    {n:"الكاس 7", u:"https://liveeu-gcp.alkassdigital.net/alkass7-p/main.m3u8"}
                 ]},
                 news: { n: "الأخبار والمنوعات", links: [
                     {n:"الجزيرة الاخبارية", u:"https://live-hls-apps-aja-fa.getaj.net/AJA/index.m3u8"},
@@ -104,8 +105,8 @@
                 ]}
             }
         },
-        earthlink: { cats: { cinemana: { n: "سينمانا لايف", links: [] } } },
-        giganet: { cats: { giga: { n: "غيغا لايف", links: [] } } }
+        earthlink: { cats: {} },
+        giganet: { cats: {} }
     };
 
     function openNetwork(id) {
