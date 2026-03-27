@@ -22,7 +22,7 @@
         .back-btn { background: #ffcc00; color: #000; padding: 12px 30px; border-radius: 10px; cursor: pointer; margin-bottom: 15px; border: none; font-weight: bold; font-size: 1.1rem; }
         .ticker { background: #ffcc00; color: #000; padding: 8px; text-align: center; font-weight: bold; }
         
-        /* التواصل الاجتماعي */
+        /* أزرار التواصل الاجتماعي */
         .social-footer { margin-top: 40px; padding: 20px; border-top: 1px solid #333; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
         .social-btn { background: #1a1a1a; color: #fff; text-decoration: none; padding: 15px 25px; border-radius: 12px; border: 2px solid #333; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
         .social-btn i { font-size: 1.5rem; }
@@ -50,7 +50,6 @@
     <img src="https://i.ibb.co/N6kq4DMs/1000045857.webp" class="logo-img">
     
     <div id="main-menu" class="main-menu">
-        <div class="card" tabindex="0" onclick="loadDailyUpdates()"><i class="fas fa-sync-alt"></i><h4>تحديثات يومية</h4></div>
         <div class="card" tabindex="0" onclick="openNetwork('others')"><i class="fas fa-tv"></i><h4>كافة الشبكات</h4></div>
         <div class="card" tabindex="0" onclick="openNetwork('earthlink')"><i class="fas fa-globe"></i><h4>أيرثلنك</h4></div>
         <div class="card" tabindex="0" onclick="openNetwork('giganet')"><i class="fas fa-bolt"></i><h4>غيغا نت</h4></div>
@@ -62,7 +61,7 @@
     </div>
 
     <div id="channels-layer" style="display:none;">
-        <button id="dynamic-back" class="back-btn" tabindex="0" onclick="backToCats()">عودة</button>
+        <button class="back-btn" tabindex="0" onclick="backToCats()">عودة للأقسام</button>
         <div class="chan-grid" id="channels-list"></div>
     </div>
 
@@ -111,7 +110,7 @@
                 ]},
                 news: { n: "الأخبار والمنوعات", links: [
                     {n:"الجزيزة الاخبارية", u:"https://live-hls-apps-aja-fa.getaj.net/AJA/index.m3u8"},
-                    {n:"قناة العربي 1", u:"https://live.kwikmotion.com/alaraby1live/alaraby_abr/playlist.m3u8"},
+                    {n:"قناة العربي", u:"https://live.kwikmotion.com/alaraby1live/alaraby_abr/playlist.m3u8"},
                     {n:"قناة العربي 2", u:"https://live.kwikmotion.com/alaraby2live/alaraby2.smil/playlist.m3u8"},
                     {n:"الشرقية", u:"https://5d94523502c2d.streamlock.net/home/mystream/playlist.m3u8"},
                     {n:"الشرقية نيوز", u:"https://5d94523502c2d.streamlock.net/alsharqiyalive/mystream/playlist.m3u8"},
@@ -129,7 +128,7 @@
                     {n:"المرجعية", u:"https://livefa.marjaeyattv.com/mtv_ar/playlist.m3u8"}
                 ]},
                 turkish: { n: "قنوات تركية", links: [
-                    {n:"BN SPORT TR 1", u:"https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-1.m3u8"},
+                    {n:"BN SPORT TR", u:"https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-1.m3u8"},
                     {n:"BEIN SPORTS TR 2", u:"https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-2.m3u8"},
                     {n:"BEIN SPORTS TR 3", u:"https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-3.m3u8"}
                 ]}
@@ -175,26 +174,6 @@
         playStream(newUrl, currentChannelName);
     }
 
-    function loadDailyUpdates() {
-        document.getElementById('main-menu').style.display = 'none';
-        document.getElementById('channels-layer').style.display = 'block';
-        document.getElementById('dynamic-back').onclick = showMain;
-        document.getElementById('dynamic-back').innerText = "عودة للرئيسية";
-        const list = document.getElementById('channels-list');
-        list.innerHTML = '<h4 style="padding:20px;">جاري تحميل تحديثات اليوم...</h4>';
-
-        fetch('daily.json')
-            .then(response => response.json())
-            .then(data => {
-                list.innerHTML = '';
-                data.forEach(link => addChannelCard(link.n, link.u));
-                if(list.querySelector('.card')) list.querySelector('.card').focus();
-            })
-            .catch(err => {
-                list.innerHTML = '<h4 style="color:red;padding:20px;">لا يوجد تحديث متاح حالياً. تأكد من وجود ملف daily.json</h4>';
-            });
-    }
-
     function openNetwork(net) {
         currentNet = net;
         document.getElementById('main-menu').style.display = 'none';
@@ -216,8 +195,6 @@
     function showChannels(catKey) {
         document.getElementById('categories-layer').style.display = 'none';
         document.getElementById('channels-layer').style.display = 'block';
-        document.getElementById('dynamic-back').onclick = backToCats;
-        document.getElementById('dynamic-back').innerText = "عودة للأقسام";
         const list = document.getElementById('channels-list');
         list.innerHTML = '';
         const cat = networks[currentNet].cats[catKey];
@@ -242,7 +219,6 @@
 
     function showMain() {
         document.getElementById('categories-layer').style.display = 'none';
-        document.getElementById('channels-layer').style.display = 'none';
         document.getElementById('main-menu').style.display = 'grid';
     }
 
@@ -261,10 +237,11 @@
             index = (index - 1 + focusable.length) % focusable.length;
             focusable[index].focus();
         } else if (e.key === 'ArrowDown') {
-            index = (index + 4) < focusable.length ? (index + 4) : index;
+            // محاولة ذكية للنزول للأسفل حسب عرض الشبكة
+            index = (index + 3) < focusable.length ? (index + 3) : index;
             focusable[index].focus();
         } else if (e.key === 'ArrowUp') {
-            index = (index - 4) >= 0 ? (index - 4) : index;
+            index = (index - 3) >= 0 ? (index - 3) : index;
             focusable[index].focus();
         } else if (e.key === 'Enter') {
             document.activeElement.click();
