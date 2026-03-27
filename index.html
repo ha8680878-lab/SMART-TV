@@ -12,8 +12,13 @@
         [tabindex]:focus { border: 5px solid #ffcc00 !important; background: #222 !important; transform: scale(1.03); }
         #player-wrapper { display: none; background: #000; border-bottom: 2px solid #333; }
         video { width: 100%; aspect-ratio: 16/9; background: #000; display: block; }
-        .quality-selector { background: #111; padding: 10px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        .q-btn { background: #333; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+        
+        /* تنسيق أزرار الجودة */
+        .quality-selector { background: #111; padding: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid #333; }
+        .q-btn { background: #333; color: #fff; border: 1px solid #444; padding: 8px 18px; border-radius: 5px; cursor: pointer; font-size: 0.9rem; font-weight: bold; transition: 0.2s; }
+        .q-btn:hover, .q-btn:focus { background: #ffcc00; color: #000; }
+        .q-active { background: #ffcc00 !important; color: #000 !important; }
+
         .content-area { text-align: center; padding: 20px; padding-bottom: 100px; }
         .logo-img { width: 100px; height: 100px; border-radius: 15px; border: 2px solid #ffcc00; margin-bottom: 10px; }
         .main-menu, .cat-grid, .chan-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; }
@@ -36,6 +41,12 @@
 
 <div id="player-wrapper">
     <video id="video" controls autoplay playsinline preload="auto"></video>
+    <div class="quality-selector" id="quality-area">
+        <button class="q-btn" tabindex="0" onclick="changeQuality('1080')">FHD (1080p)</button>
+        <button class="q-btn" tabindex="0" onclick="changeQuality('720')">HD (720p)</button>
+        <button class="q-btn" tabindex="0" onclick="changeQuality('480')">SD (480p)</button>
+        <button class="q-btn" tabindex="0" onclick="changeQuality('240')">Low (240p)</button>
+    </div>
     <div id="playing-now" style="text-align:center;color:#ffcc00;padding:10px;font-weight:bold;"></div>
 </div>
 
@@ -74,6 +85,8 @@
 <script>
     var video = document.getElementById('video');
     var currentNet = '';
+    var currentBaseUrl = ''; // لتخزين رابط القناة بدون رقم الجودة
+    var currentChannelName = '';
 
     const networks = {
         others: {
@@ -142,11 +155,39 @@
     }
 
     function playChannel(name, url) {
+        currentChannelName = name;
+        currentBaseUrl = url;
+        
+        // إظهار أو إخفاء أزرار الجودة بناءً على نوع الرابط
+        // روابط beIN تدعم الجودات المختلفة عبر تغيير الرقم في الرابط
+        if(url.includes('_1080.m3u8')) {
+            document.getElementById('quality-area').style.display = 'flex';
+        } else {
+            document.getElementById('quality-area').style.display = 'none';
+        }
+
         document.getElementById('player-wrapper').style.display = 'block';
         document.getElementById('playing-now').innerText = "جاري المشاهدة: " + name;
         video.src = url;
         video.play();
         window.scrollTo(0,0);
+    }
+
+    function changeQuality(q) {
+        // استبدال رقم الجودة في الرابط (مثلاً تحويل _1080 إلى _720)
+        let newUrl = currentBaseUrl.replace('_1080', '_' + q)
+                                   .replace('_720', '_' + q)
+                                   .replace('_480', '_' + q)
+                                   .replace('_240', '_' + q);
+        
+        currentBaseUrl = newUrl;
+        video.src = newUrl;
+        video.play();
+        
+        // تمييز الزر النشط
+        let btns = document.querySelectorAll('.q-btn');
+        btns.forEach(b => b.classList.remove('q-active'));
+        event.target.classList.add('q-active');
     }
 
     function showMain() {
