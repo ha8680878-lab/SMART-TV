@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAX VIP TV | Smart TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; outline: none; }
+        body { background: #000; color: #fff; overflow-x: hidden; }
+        [tabindex]:focus { border: 5px solid #ffcc00 !important; background: #222 !important; transform: scale(1.03); }
+        #player-wrapper { display: none; background: #000; border-bottom: 2px solid #333; }
+        video { width: 100%; aspect-ratio: 16/9; background: #000; display: block; }
+        .quality-selector { background: #111; padding: 10px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .q-btn { background: #333; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+        .content-area { text-align: center; padding: 20px; }
+        .logo-img { width: 100px; height: 100px; border-radius: 15px; border: 2px solid #ffcc00; margin-bottom: 10px; }
+        .main-menu, .cat-grid, .chan-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; }
+        .card { background: #1a1a1a; padding: 25px 10px; border-radius: 15px; border: 2px solid #333; cursor: pointer; text-align: center; transition: 0.1s; }
+        .card i { font-size: 2rem; color: #ffcc00; margin-bottom: 10px; display: block; }
+        .back-btn { background: #ffcc00; color: #000; padding: 12px 30px; border-radius: 10px; cursor: pointer; margin-bottom: 15px; border: none; font-weight: bold; font-size: 1.1rem; }
+        .ticker { background: #ffcc00; color: #000; padding: 8px; text-align: center; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="ticker">MAX VIP STORE - أفضل تجربة مشاهدة مباشرة</div>
+
+<div id="player-wrapper">
+    <video id="video" controls autoplay playsinline preload="auto"></video>
+    <div class="quality-selector" id="quality-area" style="display:none;">
+        <button class="q-btn" tabindex="0" onclick="changeQuality('adaptive')">تلقائي</button>
+        <button class="q-btn" tabindex="0" onclick="changeQuality('1080')">1080p</button>
+        <button class="q-btn" tabindex="0" onclick="changeQuality('720')">720p</button>
+        <button class="q-btn" tabindex="0" onclick="changeQuality('480')">480p</button>
+    </div>
+    <div id="playing-now" style="text-align:center;color:#ffcc00;padding:10px;font-weight:bold;"></div>
+</div>
+
+<div class="content-area">
+    <img src="https://i.ibb.co/N6kq4DMs/1000045857.webp" class="logo-img">
+    <div id="main-menu" class="main-menu">
+        <div class="card" tabindex="0" onclick="openNetwork('others')"><i class="fas fa-tv"></i><h4>كافة الشبكات</h4></div>
+        <div class="card" tabindex="0" onclick="openNetwork('earthlink')"><i class="fas fa-globe"></i><h4>أيرثلنك</h4></div>
+        <div class="card" tabindex="0" onclick="openNetwork('giganet')"><i class="fas fa-bolt"></i><h4>غيغا نت</h4></div>
+    </div>
+
+    <div id="categories-layer" style="display:none;">
+        <button class="back-btn" tabindex="0" onclick="showMain()">عودة للرئيسية</button>
+        <div class="cat-grid" id="cat-container"></div>
+    </div>
+
+    <div id="channels-layer" style="display:none;">
+        <button class="back-btn" tabindex="0" onclick="backToCats()">عودة للأقسام</button>
+        <div class="chan-grid" id="channels-list"></div>
+    </div>
+</div>
+
+<script>
+    var video = document.getElementById('video');
+    var currentBaseUrl = '';
+    var currentChannelName = '';
+    var currentNet = '';
+
+    const networks = {
+        others: {
+            cats: {
+                bein: { n: "beIN Sports", links: [
+                    {n:"BN1 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch1/ch1_1080.m3u8"}
+                ]}
+            }
+        }
+    };
+
+    function playStream(url, name) {
+        document.getElementById('player-wrapper').style.display = 'block';
+        currentChannelName = name;
+        document.getElementById('playing-now').innerText = "جاري تشغيل: " + name;
+        video.src = url;
+        video.load();
+        video.play();
+        window.scrollTo(0, 0);
+    }
+</script>
+</body>
+</html>
