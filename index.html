@@ -14,13 +14,21 @@
         video { width: 100%; aspect-ratio: 16/9; background: #000; display: block; }
         .quality-selector { background: #111; padding: 10px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .q-btn { background: #333; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1rem; }
-        .content-area { text-align: center; padding: 20px; }
+        .content-area { text-align: center; padding: 20px; padding-bottom: 100px; }
         .logo-img { width: 100px; height: 100px; border-radius: 15px; border: 2px solid #ffcc00; margin-bottom: 10px; }
         .main-menu, .cat-grid, .chan-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; }
         .card { background: #1a1a1a; padding: 25px 10px; border-radius: 15px; border: 2px solid #333; cursor: pointer; text-align: center; transition: 0.1s; }
         .card i { font-size: 2rem; color: #ffcc00; margin-bottom: 10px; display: block; }
         .back-btn { background: #ffcc00; color: #000; padding: 12px 30px; border-radius: 10px; cursor: pointer; margin-bottom: 15px; border: none; font-weight: bold; font-size: 1.1rem; }
         .ticker { background: #ffcc00; color: #000; padding: 8px; text-align: center; font-weight: bold; }
+        
+        /* أزرار التواصل الاجتماعي */
+        .social-footer { margin-top: 40px; padding: 20px; border-top: 1px solid #333; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .social-btn { background: #1a1a1a; color: #fff; text-decoration: none; padding: 15px 25px; border-radius: 12px; border: 2px solid #333; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
+        .social-btn i { font-size: 1.5rem; }
+        .whatsapp { color: #25D366; }
+        .telegram { color: #0088cc; }
+        .instagram { color: #E1306C; }
     </style>
 </head>
 <body>
@@ -40,6 +48,7 @@
 
 <div class="content-area">
     <img src="https://i.ibb.co/N6kq4DMs/1000045857.webp" class="logo-img">
+    
     <div id="main-menu" class="main-menu">
         <div class="card" tabindex="0" onclick="openNetwork('others')"><i class="fas fa-tv"></i><h4>كافة الشبكات</h4></div>
         <div class="card" tabindex="0" onclick="openNetwork('earthlink')"><i class="fas fa-globe"></i><h4>أيرثلنك</h4></div>
@@ -54,6 +63,18 @@
     <div id="channels-layer" style="display:none;">
         <button class="back-btn" tabindex="0" onclick="backToCats()">عودة للأقسام</button>
         <div class="chan-grid" id="channels-list"></div>
+    </div>
+
+    <div class="social-footer">
+        <a href="https://whatsapp.com/channel/0029VbCbHZuEVccJdJIfuC1R" class="social-btn" tabindex="0" target="_blank">
+            <i class="fab fa-whatsapp whatsapp"></i> <span>واتساب</span>
+        </a>
+        <a href="https://t.me/MAX_VIP_STORE" class="social-btn" tabindex="0" target="_blank">
+            <i class="fab fa-telegram telegram"></i> <span>تليجرام</span>
+        </a>
+        <a href="https://www.instagram.com/iq.iptv?igsh=NGl5bG1jOHZnaGE4" class="social-btn" tabindex="0" target="_blank">
+            <i class="fab fa-instagram instagram"></i> <span>انستغرام</span>
+        </a>
     </div>
 </div>
 
@@ -126,7 +147,7 @@
                 sports: { n: "Giga Sport", u: "http://stream.giganet.iq:6066/sport/ch", c: 17 }
             }
         }
-    }
+    };
 
     function playStream(url, name) {
         document.getElementById('player-wrapper').style.display = 'block';
@@ -216,10 +237,11 @@
             index = (index - 1 + focusable.length) % focusable.length;
             focusable[index].focus();
         } else if (e.key === 'ArrowDown') {
-            index = (index + 4) % focusable.length;
+            // محاولة ذكية للنزول للأسفل حسب عرض الشبكة
+            index = (index + 3) < focusable.length ? (index + 3) : index;
             focusable[index].focus();
         } else if (e.key === 'ArrowUp') {
-            index = (index - 4 + focusable.length) % focusable.length;
+            index = (index - 3) >= 0 ? (index - 3) : index;
             focusable[index].focus();
         } else if (e.key === 'Enter') {
             document.activeElement.click();
