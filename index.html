@@ -6,11 +6,12 @@
     <title>MAX VIP TV | Smart TV</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; outline: none; }
         body { background: #000; color: #fff; overflow-x: hidden; }
         [tabindex]:focus { border: 5px solid #ffcc00 !important; background: #222 !important; transform: scale(1.03); }
-        #player-wrapper { display: none; background: #000; border-bottom: 2px solid #333; }
+        #player-wrapper { display: none; background: #000; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 999; }
         video { width: 100%; aspect-ratio: 16/9; background: #000; display: block; }
         .content-area { text-align: center; padding: 20px; padding-bottom: 100px; }
         .logo-img { width: 100px; height: 100px; border-radius: 15px; border: 2px solid #ffcc00; margin-bottom: 10px; }
@@ -19,18 +20,14 @@
         .card i { font-size: 2rem; color: #ffcc00; margin-bottom: 10px; display: block; }
         .back-btn { background: #ffcc00; color: #000; padding: 12px 30px; border-radius: 10px; cursor: pointer; margin-bottom: 15px; border: none; font-weight: bold; font-size: 1.1rem; }
         .ticker { background: #ffcc00; color: #000; padding: 8px; text-align: center; font-weight: bold; }
-        
         .social-footer { margin-top: 40px; padding: 20px; border-top: 1px solid #333; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .social-btn { background: #1a1a1a; color: #fff; text-decoration: none; padding: 15px 25px; border-radius: 12px; border: 2px solid #333; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
-        .social-btn i { font-size: 1.5rem; }
-        .whatsapp { color: #25D366; }
-        .telegram { color: #0088cc; }
-        .instagram { color: #E1306C; }
+        .social-btn { background: #1a1a1a; color: #fff; text-decoration: none; padding: 15px 25px; border-radius: 12px; border: 2px solid #333; display: flex; align-items: center; gap: 10px; }
+        .whatsapp { color: #25D366; } .telegram { color: #0088cc; } .instagram { color: #E1306C; }
     </style>
 </head>
 <body>
 
-<div class="ticker">MAX VIP STORE - أفضل تجربة مشاهدة مباشرة</div>
+<div class="ticker">MAX VIP STORE - مشغل فائق السرعة وجاهز للمشاهدة</div>
 
 <div id="player-wrapper">
     <video id="video" controls autoplay playsinline preload="auto"></video>
@@ -57,22 +54,17 @@
     </div>
 
     <div class="social-footer">
-        <a href="https://whatsapp.com/channel/0029VbCbHZuEVccJdJIfuC1R" class="social-btn" tabindex="0" target="_blank">
-            <i class="fab fa-whatsapp whatsapp"></i> <span>واتساب</span>
-        </a>
-        <a href="https://t.me/MAX_VIP_STORE" class="social-btn" tabindex="0" target="_blank">
-            <i class="fab fa-telegram telegram"></i> <span>تليجرام</span>
-        </a>
-        <a href="https://www.instagram.com/iq.iptv?igsh=NGl5bG1jOHZnaGE4" class="social-btn" tabindex="0" target="_blank">
-            <i class="fab fa-instagram instagram"></i> <span>انستغرام</span>
-        </a>
+        <a href="https://whatsapp.com/channel/0029VbCbHZuEVccJdJIfuC1R" class="social-btn" tabindex="0"><i class="fab fa-whatsapp whatsapp"></i> واتساب</a>
+        <a href="https://t.me/MAX_VIP_STORE" class="social-btn" tabindex="0"><i class="fab fa-telegram telegram"></i> تليجرام</a>
+        <a href="https://www.instagram.com/iq.iptv?igsh=NGl5bG1jOHZnaGE4" class="social-btn" tabindex="0"><i class="fab fa-instagram instagram"></i> انستغرام</a>
     </div>
 </div>
 
 <script>
     var video = document.getElementById('video');
-    var currentNet = '';
+    var hls = null;
 
+    // مصفوفة القنوات كاملة دون نقص
     const networks = {
         others: {
             cats: {
@@ -146,6 +138,37 @@
         giganet: { cats: {} }
     };
 
+    function playChannel(name, url) {
+        document.getElementById('player-wrapper').style.display = 'block';
+        document.getElementById('playing-now').innerText = "جاري المشاهدة: " + name;
+
+        // منطق المشغل السريع:
+        // إذا كان المتصفح يدعم Hls.js (أندرويد، متصفحات حديثة)
+        if (Hls.isSupported()) {
+            if (hls) { hls.destroy(); }
+            hls = new Hls({
+                // هذه الإعدادات هي سر السرعة في الموقع الذي أرسلته
+                enableWorker: true,
+                maxBufferLength: 30,
+                maxMaxBufferLength: 60,
+                startLevel: -1, // يبدأ بأفضل جودة تلقائياً
+                appendErrorMaxRetry: 10
+            });
+            hls.loadSource(url);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play();
+            });
+        } 
+        // إذا كان المشغل الأصلي للشاشة يدعم البث مباشرة (Tizen, WebOS, iPhone)
+        else {
+            video.src = url;
+            video.play();
+        }
+        window.scrollTo(0,0);
+    }
+
+    // دوال التحكم في الواجهة
     function openNetwork(id) {
         currentNet = id;
         document.getElementById('main-menu').style.display = 'none';
@@ -178,14 +201,6 @@
         });
     }
 
-    function playChannel(name, url) {
-        document.getElementById('player-wrapper').style.display = 'block';
-        document.getElementById('playing-now').innerText = "جاري المشاهدة: " + name;
-        video.src = url;
-        video.play();
-        window.scrollTo(0,0);
-    }
-
     function showMain() {
         document.getElementById('categories-layer').style.display = 'none';
         document.getElementById('main-menu').style.display = 'grid';
@@ -198,4 +213,3 @@
 </script>
 </body>
 </html>
-
