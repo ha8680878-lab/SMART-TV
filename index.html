@@ -42,16 +42,7 @@
 <div class="content-area">
     <img src="https://i.ibb.co/N6kq4DMs/1000045857.webp" class="logo-img">
     
-    <div id="main-menu" class="main-menu">
-        <div class="card" tabindex="0" onclick="openNetwork('others')"><i class="fas fa-tv"></i><h4>كافة الشبكات</h4></div>
-        <div class="card" tabindex="0" onclick="openNetwork('earthlink')"><i class="fas fa-globe"></i><h4>أيرثلنك</h4></div>
-        <div class="card" tabindex="0" onclick="openNetwork('giganet')"><i class="fas fa-bolt"></i><h4>غيغا نت</h4></div>
-    </div>
-
-    <div id="categories-layer" style="display:none;">
-        <button class="back-btn" tabindex="0" onclick="showMain()">عودة للرئيسية</button>
-        <div class="cat-grid" id="cat-container"></div>
-    </div>
+    <div id="categories-layer" class="cat-grid"></div>
 
     <div id="channels-layer" style="display:none;">
         <button class="back-btn" tabindex="0" onclick="backToCats()">عودة للأقسام</button>
@@ -73,50 +64,60 @@
 
 <script>
     var video = document.getElementById('video');
-    var currentNet = '';
 
-    const networks = {
-        others: {
-            cats: {
-                bein: { n: "beIN Sports", links: [
-                    {n:"BN1 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch1/ch1_1080.m3u8"},
-                    {n:"BN2 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch2/ch2_1080.m3u8"},
-                    {n:"BN3 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch3/ch3_1080.m3u8"},
-                    {n:"BN4 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch4/ch4_1080.m3u8"},
-                    {n:"BN5 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch5/ch5_1080.m3u8"},
-                    {n:"BN6 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch6/ch6_1080.m3u8"},
-                    {n:"BN7 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch7/ch7_1080.m3u8"},
-                    {n:"MAXVIP", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch8/ch8_1080.m3u8"},
-                    {n:"BN9", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch9/ch9_1080.m3u8"},
-                    {n:"STARZPLAY", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch10/ch10_1080.m3u8"}
-                ]},
-                alkass: { n: "قنوات الكاس", links: [
-                    {n:"الكاس 1", u:"https://liveeu-gcp.alkassdigital.net/alkass1-p/main.m3u8"},
-                    {n:"الكاس 2", u:"https://liveeu-gcp.alkassdigital.net/alkass2-p/main.m3u8"},
-                    {n:"الكاس 3", u:"https://liveeu-gcp.alkassdigital.net/alkass3-p/main.m3u8"},
-                    {n:"الكاس 4", u:"https://liveeu-gcp.alkassdigital.net/alkass4-p/main.m3u8"},
-                    {n:"الكاس 5", u:"https://liveeu-gcp.alkassdigital.net/alkass5-p/main.m3u8"},
-                    {n:"الكاس 6", u:"https://liveeu-gcp.alkassdigital.net/alkass6-p/main.m3u8"},
-                    {n:"الكاس 7", u:"https://liveeu-gcp.alkassdigital.net/alkass7-p/main.m3u8"}
-                ]},
-                news: { n: "الأخبار والمنوعات", links: [
-                    {n:"الجزيرة الاخبارية", u:"https://live-hls-apps-aja-fa.getaj.net/AJA/index.m3u8"},
-                    {n:"العربية HD", u:"https://live.alarabiya.net/alarabiya/alarabiya.smil/playlist.m3u8"}
-                ]}
-            }
-        },
-        earthlink: { cats: {} },
-        giganet: { cats: {} }
+    // القنوات مقسمة في فئات مباشرة ومضاف إليها الروابط الجديدة
+    const categories = {
+        bein: { n: "beIN Sports", links: [
+            {n:"BN1 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch1/ch1_1080.m3u8"},
+            {n:"BN2 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch2/ch2_1080.m3u8"},
+            {n:"BN3 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch3/ch3_1080.m3u8"},
+            {n:"BN4 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch4/ch4_1080.m3u8"},
+            {n:"BN5 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch5/ch5_1080.m3u8"},
+            {n:"BN6 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch6/ch6_1080.m3u8"},
+            {n:"BN7 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch7/ch7_1080.m3u8"},
+            {n:"MAXVIP", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch8/ch8_1080.m3u8"},
+            {n:"BN9", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch9/ch9_1080.m3u8"},
+            {n:"STARZPLAY", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch10/ch10_1080.m3u8"}
+        ]},
+        purple: { n: "beIN Purple 🟪", links: [
+            {n:"BN1 🟪", u:"https://sport.alamna.live/alammna/live/2e92140d/BeIN_SPORTS_1.m3u8"},
+            {n:"BN2 🟪", u:"https://sport.alamna.live/alammna/live/30e908fc/BeIN_SPORTS_2.m3u8"},
+            {n:"BN3 🟪", u:"https://sport.alamna.live/alammna/live/5506db83/BeIN_SPORTS_3.m3u8"},
+            {n:"BN4 🟪", u:"https://sport.alamna.live/alammna/live/f232c42b/BeIN_SPORTS_4.m3u8"},
+            {n:"BN5 🟪", u:"https://sport.alamna.live/alammna/live/1ef34955/BeIN_SPORTS_5.m3u8"},
+            {n:"BN6 🟪", u:"https://sport.alamna.live/alammna/live/68793d4f/BeIN_SPORTS_6.m3u8"},
+            {n:"BN7 🟪", u:"https://sport.alamna.live/alammna/live/4a515232/BeIN_SPORTS_7.m3u8"},
+            {n:"BN8 🟪", u:"https://sport.alamna.live/alammna/live/101ac041/BeIN_SPORTS_8.m3u8"},
+            {n:"BN9 🟪", u:"https://sport.alamna.live/alammna/live/66b29143/BeIN_SPORTS_9.m3u8"}
+        ]},
+        alkass: { n: "قنوات الكاس", links: [
+            {n:"الكاس 1", u:"https://liveeu-gcp.alkassdigital.net/alkass1-p/main.m3u8"},
+            {n:"الكاس 2", u:"https://liveeu-gcp.alkassdigital.net/alkass2-p/main.m3u8"},
+            {n:"الكاس 3", u:"https://liveeu-gcp.alkassdigital.net/alkass3-p/main.m3u8"},
+            {n:"الكاس 4", u:"https://liveeu-gcp.alkassdigital.net/alkass4-p/main.m3u8"},
+            {n:"الكاس 5", u:"https://liveeu-gcp.alkassdigital.net/alkass5-p/main.m3u8"},
+            {n:"الكاس 6", u:"https://liveeu-gcp.alkassdigital.net/alkass6-p/main.m3u8"},
+            {n:"الكاس 7", u:"https://liveeu-gcp.alkassdigital.net/alkass7-p/main.m3u8"}
+        ]},
+        iraq: { n: "قنوات عراقية", links: [
+            {n:"MBC IRAQ", u:"https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-iraq/e38c44b1b43474e1c39cb5b90203691e/index.m3u8"},
+            {n:"UTV", u:"https://mn-nl.mncdn.com/utviraqi2/64c80359/index.m3u8"},
+            {n:"الشرقية", u:"https://5d94523502c2d.streamlock.net/home/mystream/playlist.m3u8"},
+            {n:"الرشيد", u:"https://media1.livaat.com/static/AL-RASHEED-HD/playlist.m3u8"},
+            {n:"iraqi sport", u:"https://tv.vodu.me:1995/live/iraqia-sport/playlist.m3u8"}
+        ]},
+        news: { n: "الأخبار والمنوعات", links: [
+            {n:"الجزيرة الاخبارية", u:"https://live-hls-apps-aja-fa.getaj.net/AJA/index.m3u8"},
+            {n:"العربية HD", u:"https://live.alarabiya.net/alarabiya/alarabiya.smil/playlist.m3u8"}
+        ]}
     };
 
-    function openNetwork(id) {
-        currentNet = id;
-        document.getElementById('main-menu').style.display = 'none';
-        document.getElementById('categories-layer').style.display = 'block';
-        let container = document.getElementById('cat-container');
+    // تشغيل وعرض الأقسام فور فتح الصفحة
+    function init() {
+        let container = document.getElementById('categories-layer');
         container.innerHTML = '';
-        for (let key in networks[id].cats) {
-            let cat = networks[id].cats[key];
+        for (let key in categories) {
+            let cat = categories[key];
             let div = document.createElement('div');
             div.className = 'card';
             div.tabIndex = 0;
@@ -126,12 +127,12 @@
         }
     }
 
-    function openCategory(catKey) {
+    function openCategory(key) {
         document.getElementById('categories-layer').style.display = 'none';
         document.getElementById('channels-layer').style.display = 'block';
         let list = document.getElementById('channels-list');
         list.innerHTML = '';
-        networks[currentNet].cats[catKey].links.forEach(link => {
+        categories[key].links.forEach(link => {
             let div = document.createElement('div');
             div.className = 'card';
             div.tabIndex = 0;
@@ -141,6 +142,7 @@
         });
     }
 
+    // المشغل الخاص بك بدون أي تعديل أو إضافات خارجية
     function playChannel(name, url) {
         document.getElementById('player-wrapper').style.display = 'block';
         document.getElementById('playing-now').innerText = "جاري المشاهدة: " + name;
@@ -149,15 +151,13 @@
         window.scrollTo(0,0);
     }
 
-    function showMain() {
-        document.getElementById('categories-layer').style.display = 'none';
-        document.getElementById('main-menu').style.display = 'grid';
-    }
-
     function backToCats() {
         document.getElementById('channels-layer').style.display = 'none';
-        document.getElementById('categories-layer').style.display = 'block';
+        document.getElementById('categories-layer').style.display = 'grid';
     }
+
+    // استدعاء دالة البدء
+    init();
 </script>
 </body>
 </html>
