@@ -65,7 +65,6 @@
 <script>
     var video = document.getElementById('video');
 
-    // القنوات مقسمة في فئات مباشرة ومضاف إليها الروابط الجديدة
     const categories = {
         bein: { n: "beIN Sports", links: [
             {n:"BN1 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch1/ch1_1080.m3u8"},
@@ -79,7 +78,8 @@
             {n:"BN9", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch9/ch9_1080.m3u8"},
             {n:"STARZPLAY", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch10/ch10_1080.m3u8"}
         ]},
-        bn S2: { n: "BN S2", links: [
+
+        bnS2: { n: "BN S2", links: [
             {n:"BN1S2 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch1/ch1_1080.m3u8"},
             {n:"BN2S2 🇮🇶", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272467.m3u8"},
             {n:"BN3S2 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch3/ch3_1080.m3u8"},
@@ -90,6 +90,7 @@
             {n:"BN8S2 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch8/ch8_1080.m3u8"},
             {n:"BN9S2 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch9/ch9_1080.m3u8"},
         ]},
+
         alkass: { n: "قنوات الكاس", links: [
             {n:"الكاس 1", u:"https://liveeu-gcp.alkassdigital.net/alkass1-p/main.m3u8"},
             {n:"الكاس 2", u:"https://liveeu-gcp.alkassdigital.net/alkass2-p/main.m3u8"},
@@ -99,6 +100,7 @@
             {n:"الكاس 6", u:"https://liveeu-gcp.alkassdigital.net/alkass6-p/main.m3u8"},
             {n:"الكاس 7", u:"https://liveeu-gcp.alkassdigital.net/alkass7-p/main.m3u8"}
         ]},
+
         iraq: { n: "قنوات عراقية", links: [
             {n:"MBC IRAQ", u:"https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-iraq/e38c44b1b43474e1c39cb5b90203691e/index.m3u8"},
             {n:"UTV", u:"https://mn-nl.mncdn.com/utviraqi2/64c80359/index.m3u8"},
@@ -106,13 +108,13 @@
             {n:"الرشيد", u:"https://media1.livaat.com/static/AL-RASHEED-HD/playlist.m3u8"},
             {n:"iraqi sport", u:"https://tv.vodu.me:1995/live/iraqia-sport/playlist.m3u8"}
         ]},
+
         news: { n: "الأخبار والمنوعات", links: [
             {n:"الجزيرة الاخبارية", u:"https://live-hls-apps-aja-fa.getaj.net/AJA/index.m3u8"},
             {n:"العربية HD", u:"https://live.alarabiya.net/alarabiya/alarabiya.smil/playlist.m3u8"}
         ]}
     };
 
-    // تشغيل وعرض الأقسام فور فتح الصفحة
     function init() {
         let container = document.getElementById('categories-layer');
         container.innerHTML = '';
@@ -142,7 +144,6 @@
         });
     }
 
-    // المشغل الخاص بك بدون أي تعديل أو إضافات خارجية
     function playChannel(name, url) {
         document.getElementById('player-wrapper').style.display = 'block';
         document.getElementById('playing-now').innerText = "جاري المشاهدة: " + name;
@@ -156,9 +157,7 @@
         document.getElementById('categories-layer').style.display = 'grid';
     }
 
-    // استدعاء دالة البدء
     init();
 </script>
 </body>
 </html>
-
