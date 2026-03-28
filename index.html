@@ -10,153 +10,194 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; outline: none; }
         body { background: #000; color: #fff; overflow-x: hidden; }
-        [tabindex]:focus { border: 5px solid #ffcc00 !important; background: #222 !important; transform: scale(1.03); }
-        #player-wrapper { display: none; background: #000; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 999; }
+        [tabindex]:focus { border: 5px solid #ffcc00 !important; background: #222 !important; transform: scale(1.05); z-index: 10; }
+        
+        #player-wrapper { display: none; background: #000; border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 999; width: 100%; }
         video { width: 100%; aspect-ratio: 16/9; background: #000; display: block; }
+        
         .content-area { text-align: center; padding: 20px; padding-bottom: 100px; }
-        .logo-img { width: 100px; height: 100px; border-radius: 15px; border: 2px solid #ffcc00; margin-bottom: 10px; }
-        .main-menu, .cat-grid, .chan-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 20px; }
-        .card { background: #1a1a1a; padding: 25px 10px; border-radius: 15px; border: 2px solid #333; cursor: pointer; text-align: center; }
-        .card i { font-size: 2rem; color: #ffcc00; margin-bottom: 10px; display: block; }
-        .back-btn { background: #ffcc00; color: #000; padding: 12px 30px; border-radius: 10px; cursor: pointer; margin-bottom: 15px; border: none; font-weight: bold; width: 100%; max-width: 300px; }
+        .logo-img { width: 120px; height: 120px; border-radius: 20px; border: 2px solid #ffcc00; margin-bottom: 15px; }
+        
+        /* تقسيم الشبكة */
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 12px; margin-top: 20px; }
+        .card { background: #1a1a1a; padding: 20px 10px; border-radius: 15px; border: 2px solid #333; cursor: pointer; text-align: center; transition: 0.2s; }
+        .card i { font-size: 1.8rem; color: #ffcc00; margin-bottom: 8px; display: block; }
+        .card h4 { font-size: 0.9rem; }
+
+        .back-btn { background: #ffcc00; color: #000; padding: 12px 30px; border-radius: 10px; cursor: pointer; margin: 10px auto 20px auto; border: none; font-weight: bold; width: 100%; max-width: 300px; display: block; font-size: 1rem; }
         .ticker { background: #ffcc00; color: #000; padding: 8px; text-align: center; font-weight: bold; font-size: 0.9rem; }
+        
+        /* أزرار التواصل */
         .social-footer { margin-top: 40px; padding: 20px; border-top: 1px solid #333; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        .social-btn { background: #1a1a1a; color: #fff; text-decoration: none; padding: 12px 20px; border-radius: 10px; border: 2px solid #333; display: flex; align-items: center; gap: 8px; font-size: 0.8rem; }
+        .social-btn { background: #1a1a1a; color: #fff; text-decoration: none; padding: 12px 20px; border-radius: 10px; border: 2px solid #333; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
+        .whatsapp { color: #25D366; } .telegram { color: #0088cc; } .instagram { color: #E1306C; }
     </style>
 </head>
 <body>
 
-<div class="ticker">MAX VIP - تم تحديث مشغل باقة 🟣 ليعمل مباشرة على المتصفح</div>
+<div class="ticker">MAX VIP - باقة 🟣 تعمل الآن بكفاءة عالية على المتصفح</div>
 
 <div id="player-wrapper">
     <video id="video" controls autoplay playsinline></video>
-    <div id="playing-now" style="text-align:center;color:#ffcc00;padding:10px;font-weight:bold;font-size:0.9rem;"></div>
+    <div id="playing-now" style="text-align:center;color:#ffcc00;padding:10px;font-weight:bold; font-size: 1rem;"></div>
 </div>
 
 <div class="content-area">
-    <img src="https://i.ibb.co/N6kq4DMs/1000045857.webp" class="logo-img">
+    <img src="https://i.ibb.co/N6kq4DMs/1000045857.webp" class="logo-img" id="main-logo">
     
-    <div id="main-menu" class="main-menu">
-        <div class="card" tabindex="0" onclick="openNetwork('others')"><i class="fas fa-tv"></i><h4>كافة الشبكات</h4></div>
-        <div class="card" tabindex="0" onclick="openNetwork('earthlink')"><i class="fas fa-globe"></i><h4>أيرثلنك</h4></div>
-        <div class="card" tabindex="0" onclick="openNetwork('giganet')"><i class="fas fa-bolt"></i><h4>غيغا نت</h4></div>
-    </div>
-
-    <div id="categories-layer" style="display:none;">
-        <button class="back-btn" tabindex="0" onclick="showMain()">عودة للرئيسية</button>
-        <div class="cat-grid" id="cat-container"></div>
-    </div>
+    <div id="categories-layer" class="grid-layout"></div>
 
     <div id="channels-layer" style="display:none;">
-        <button class="back-btn" tabindex="0" onclick="backToCats()">عودة للأقسام</button>
-        <div class="chan-grid" id="channels-list"></div>
+        <button class="back-btn" tabindex="0" onclick="showCategories()">العودة للأقسام</button>
+        <div id="channels-list" class="grid-layout"></div>
     </div>
 
     <div class="social-footer">
-        <a href="https://whatsapp.com/channel/0029VbCbHZuEVccJdJIfuC1R" class="social-btn"><i class="fab fa-whatsapp"></i> واتساب</a>
-        <a href="https://t.me/MAX_VIP_STORE" class="social-btn"><i class="fab fa-telegram"></i> تليجرام</a>
+        <a href="https://whatsapp.com/channel/0029VbCbHZuEVccJdJIfuC1R" class="social-btn" tabindex="0"><i class="fab fa-whatsapp whatsapp"></i> واتساب</a>
+        <a href="https://t.me/MAX_VIP_STORE" class="social-btn" tabindex="0"><i class="fab fa-telegram telegram"></i> تليجرام</a>
+        <a href="https://www.instagram.com/iq.iptv?igsh=NGl5bG1jOHZnaGE4" class="social-btn" tabindex="0"><i class="fab fa-instagram instagram"></i> انستغرام</a>
     </div>
 </div>
 
 <script>
     let hls = null;
     const video = document.getElementById('video');
-    var currentNet = '';
+    const playerWrapper = document.getElementById('player-wrapper');
+    const mainLogo = document.getElementById('main-logo');
 
-    const networks = {
-        others: {
-            cats: {
-                bein: { n: "beIN Sports", links: [
-                    {n:"BN1 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch1/adaptive.m3u8"},
-                    {n:"BN2 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch2/ch2_1080.m3u8"},
-                    {n:"BN3 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch3/ch3_1080.m3u8"},
-                    {n:"MAXVIP", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch8/ch8_1080.m3u8"},
-                    {n:"BN SPORT NEWS", u:"https://tv.vodu.me:1995/live/beinsport-news/playlist.m3u8"}
-                ]},
-                purple: { n: "beIN Purple", links: [
-                    {n:"BN1 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/1.m3u8"},
-                    {n:"BN2 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272467.m3u8"},
-                    {n:"BN3 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272465.m3u8"},
-                    {n:"BN4 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272464.m3u8"},
-                    {n:"BN5 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272463.m3u8"},
-                    {n:"BN6 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272462.m3u8"},
-                    {n:"BN7 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272461.m3u8"},
-                    {n:"BN8 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272460.m3u8"},
-                    {n:"BN9 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272459.m3u8"}
-                ]},
-                iraq: { n: "قنوات عراقية", links: [
-                    {n:"MBC IRAQ", u:"https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-iraq/e38c44b1b43474e1c39cb5b90203691e/index.m3u8"},
-                    {n:"UTV", u:"https://mn-nl.mncdn.com/utviraqi2/64c80359/index.m3u8"}
-                ]}
-            }
+    // تجميع كافة القنوات في فئات مباشرة
+    const categories = {
+        bein_sports: {
+            n: "beIN Sports",
+            icon: "fa-volleyball-ball",
+            links: [
+                {n:"BN1 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch1/adaptive.m3u8"},
+                {n:"BN2 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch2/ch2_1080.m3u8"},
+                {n:"BN3 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch3/ch3_1080.m3u8"},
+                {n:"BN4 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch4/ch4_1080.m3u8"},
+                {n:"BN5 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch5/ch5_1080.m3u8"},
+                {n:"BN6 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch6/ch6_1080.m3u8"},
+                {n:"BN7 🇮🇶", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch7/ch7_1080.m3u8"},
+                {n:"MAXVIP", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch8/ch8_1080.m3u8"},
+                {n:"BN9", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch9/ch9_1080.m3u8"},
+                {n:"STARZPLAY", u:"https://stream.supertv.gg:3001/supertv/sport/stv1/ch10/ch10_1080.m3u8"},
+                {n:"BEIN NEWS", u:"https://tv.vodu.me:1995/live/beinsport-news/playlist.m3u8"},
+                {n:"BN SPORT TR", u:"https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-1.m3u8"}
+            ]
         },
-        earthlink: { cats: {} },
-        giganet: { cats: {} }
+        purple: {
+            n: "beIN Purple 🟣",
+            icon: "fa-play-circle",
+            links: [
+                {n:"BN1 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/1.m3u8"},
+                {n:"BN2 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272467.m3u8"},
+                {n:"BN3 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272465.m3u8"},
+                {n:"BN4 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272464.m3u8"},
+                {n:"BN5 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272463.m3u8"},
+                {n:"BN6 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272462.m3u8"},
+                {n:"BN7 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272461.m3u8"},
+                {n:"BN8 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272460.m3u8"},
+                {n:"BN9 S🟣", u:"http://yddfknmd.vip:2082/live/YDDMDFKN_972151/J11rmEOm/272459.m3u8"}
+            ]
+        },
+        alkass: {
+            n: "قنوات الكاس",
+            icon: "fa-trophy",
+            links: [
+                {n:"الكاس 1", u:"https://liveeu-gcp.alkassdigital.net/alkass1-p/main.m3u8"},
+                {n:"الكاس 2", u:"https://liveeu-gcp.alkassdigital.net/alkass2-p/main.m3u8"},
+                {n:"الكاس 3", u:"https://liveeu-gcp.alkassdigital.net/alkass3-p/main.m3u8"},
+                {n:"الكاس 4", u:"https://liveeu-gcp.alkassdigital.net/alkass4-p/main.m3u8"},
+                {n:"الكاس 5", u:"https://liveeu-gcp.alkassdigital.net/alkass5-p/main.m3u8"},
+                {n:"الكاس 6", u:"https://liveeu-gcp.alkassdigital.net/alkass6-p/main.m3u8"},
+                {n:"الكاس 7", u:"https://liveeu-gcp.alkassdigital.net/alkass7-p/main.m3u8"}
+            ]
+        },
+        iraq: {
+            n: "قنوات عراقية",
+            icon: "fa-flag",
+            links: [
+                {n:"MBC IRAQ", u:"https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-iraq/e38c44b1b43474e1c39cb5b90203691e/index.m3u8"},
+                {n:"UTV", u:"https://mn-nl.mncdn.com/utviraqi2/64c80359/index.m3u8"},
+                {n:"الشرقية", u:"https://5d94523502c2d.streamlock.net/home/mystream/playlist.m3u8"},
+                {n:"الرشيد", u:"https://media1.livaat.com/static/AL-RASHEED-HD/playlist.m3u8"},
+                {n:"Iraqi Sport", u:"https://tv.vodu.me:1995/live/iraqia-sport/playlist.m3u8"},
+                {n:"I NEWS", u:"https://live.i-news.tv/hls/stream.m3u8"}
+            ]
+        },
+        news_kids: {
+            n: "أخبار وأطفال",
+            icon: "fa-child",
+            links: [
+                {n:"الجزيرة", u:"https://live-hls-apps-aja-fa.getaj.net/AJA/index.m3u8"},
+                {n:"العربية", u:"https://live.alarabiya.net/alarabiya/alarabiya.smil/playlist.m3u8"},
+                {n:"BBC Arabic", u:"https://vs-hls-pushb-ww-live.akamaized.net/x=4/i=urn:bbc:pips:service:bbc_arabic_tv/mobile_wifi_main_hd_abr_v2.m3u8"},
+                {n:"Red Bull TV", u:"https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8"},
+                {n:"France 24", u:"https://live.france24.com/hls/live/2037222/F24_AR_HI_HLS/master_2300.m3u8"},
+                {n:"Travelxp", u:"https://27c980761ff9437d929e64647afe183a.mediatailor.us-east-1.amazonaws.com/v1/master/44f73ba4d03e9607dcd9bebdcb8494d86964f1d8/RakutenTV-eu_TravelXP/playlist.m3u8"},
+                {n:"STARZPLAY 1", u:"https://tv.vodu.me:1995/live/ad-sport1/playlist.m3u8"}
+            ]
+        }
     };
 
+    // تحميل الأقسام عند فتح الصفحة
+    function init() {
+        const catContainer = document.getElementById('categories-layer');
+        catContainer.innerHTML = '';
+        for (let key in categories) {
+            let cat = categories[key];
+            let div = document.createElement('div');
+            div.className = 'card';
+            div.tabIndex = 0;
+            div.innerHTML = `<i class="fas ${cat.icon}"></i><h4>${cat.n}</h4>`;
+            div.onclick = () => showChannels(key);
+            catContainer.appendChild(div);
+        }
+    }
+
+    function showChannels(key) {
+        document.getElementById('categories-layer').style.display = 'none';
+        document.getElementById('channels-layer').style.display = 'block';
+        const list = document.getElementById('channels-list');
+        list.innerHTML = '';
+        categories[key].links.forEach(link => {
+            let div = document.createElement('div');
+            div.className = 'card';
+            div.tabIndex = 0;
+            div.innerHTML = `<i class="fas fa-play"></i><h4>${link.n}</h4>`;
+            div.onclick = () => playChannel(link.n, link.u);
+            list.appendChild(div);
+        });
+    }
+
+    function showCategories() {
+        document.getElementById('channels-layer').style.display = 'none';
+        document.getElementById('categories-layer').style.display = 'grid';
+    }
+
     function playChannel(name, url) {
-        document.getElementById('player-wrapper').style.display = 'block';
+        playerWrapper.style.display = 'block';
+        mainLogo.style.display = 'none'; // إخفاء الشعار لترك مساحة للمشغل
         document.getElementById('playing-now').innerText = "جاري المشاهدة: " + name;
 
-        // تنظيف المشغل تماماً
         if (hls) { hls.destroy(); hls = null; }
         video.pause();
         video.removeAttribute('src');
         video.load();
 
-        // استخدام المشغل الذكي Hls.js لروابط 🟣 والروابط المعقدة
         if (Hls.isSupported()) {
             hls = new Hls();
             hls.loadSource(url);
             hls.attachMedia(video);
             hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
-        } 
-        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        } else {
             video.src = url;
             video.play();
         }
         window.scrollTo(0,0);
     }
 
-    function openNetwork(id) {
-        currentNet = id;
-        document.getElementById('main-menu').style.display = 'none';
-        document.getElementById('categories-layer').style.display = 'block';
-        let container = document.getElementById('cat-container');
-        container.innerHTML = '';
-        for (let key in networks[id].cats) {
-            let cat = networks[id].cats[key];
-            let div = document.createElement('div');
-            div.className = 'card'; div.tabIndex = 0;
-            div.innerHTML = `<i class="fas fa-folder"></i><h4>${cat.n}</h4>`;
-            div.onclick = () => openCategory(key);
-            container.appendChild(div);
-        }
-    }
-
-    function openCategory(catKey) {
-        document.getElementById('categories-layer').style.display = 'none';
-        document.getElementById('channels-layer').style.display = 'block';
-        let list = document.getElementById('channels-list');
-        list.innerHTML = '';
-        networks[currentNet].cats[catKey].links.forEach(link => {
-            let div = document.createElement('div');
-            div.className = 'card'; div.tabIndex = 0;
-            div.innerHTML = `<i class="fas fa-play-circle"></i><h4>${link.n}</h4>`;
-            div.onclick = () => playChannel(link.n, link.u);
-            list.appendChild(div);
-        });
-    }
-
-    function showMain() {
-        document.getElementById('categories-layer').style.display = 'none';
-        document.getElementById('main-menu').style.display = 'grid';
-    }
-
-    function backToCats() {
-        document.getElementById('channels-layer').style.display = 'none';
-        document.getElementById('categories-layer').style.display = 'block';
-    }
+    init(); // تشغيل الأقسام فوراً
 </script>
 </body>
 </html>
